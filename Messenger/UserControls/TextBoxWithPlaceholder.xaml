@@ -1,0 +1,208 @@
+﻿<UserControl x:Class="Messenger.UserControls.TextBoxWithPlaceholder"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Messenger.UserControls" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             Height="68" Width="Auto"
+             x:Name="TextBoxWithPlaceholderUserControl">
+
+    <UserControl.Resources>
+        
+        <!--Стиль подписи, которая будет в блоке до ввода пользователя. Когда пользователь введет что-либо, эта надпись сместится вверх-->
+        <Style x:Key="title" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground"  Value="#E8F7EE"/>
+            <Setter Property="Opacity" Value="0.5"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Background" Value="Transparent"/>
+            
+            <!--Так как нам этот UserControl необходимо переиспользовать, выполняем привязку текста (создаем свойство зависимости) здесь * -->
+            <Setter Property="Text" Value="{Binding Placeholder, ElementName=TextBoxWithPlaceholderUserControl}"/>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Text, ElementName=userData}" Value="">
+                    
+                    <!--Исходная позиция и размер текста подписи-->
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard SpeedRatio="10">
+                                <DoubleAnimation Storyboard.TargetProperty="FontSize" To="20"/>
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" To="0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+
+                    <!--Позиция и размер подписи при наличии контента в TextBox'е-->
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard SpeedRatio="10">
+                                <DoubleAnimation Storyboard.TargetProperty="FontSize" To="12"/>
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" To="0 0 0 28"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="userDataStyle" TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground"  Value="#E8F7EE"/>
+            <Setter Property="FontSize" Value="16"/>
+            
+            <!--Убираем Padding по умолчанию для TextBox-->
+            <Setter Property="Padding" Value="-2 0"/>
+            
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+
+            <!--и здесь * (свойство зависимости)-->
+            <Setter Property="Text" Value="{Binding Text, Mode=TwoWay,ElementName=TextBoxWithPlaceholderUserControl}"/>
+
+            <!--Нужно сдвинуть текст, вводимый пользователем ниже-->
+            <Style.Triggers>
+
+                <!--Когда размер текста в ЭУ titleTextBlock будет равен 12 => пользователь начал что-то вводить и подпись в titleTextBlock 
+                уменьшилась до 12, тогда нужно то, что вводит пользователь сместить ниже-->
+                <DataTrigger Binding="{Binding FontSize, ElementName=titleTextBlock}" Value="12">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard SpeedRatio="10">
+                                <DoubleAnimation Storyboard.TargetProperty="FontSize" To="16"/>
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" To="0 20 0 0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard SpeedRatio="10">
+                                <DoubleAnimation Storyboard.TargetProperty="FontSize" To="20"/>
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" To="0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+
+            <!--получаем пароль в TextBox, когда TextBox пуст-->
+                <DataTrigger Binding="{Binding Text, Mode=TwoWay,ElementName=TextBoxWithPlaceholderUserControl}" Value="">
+                    <Setter Property="Text" Value="{Binding Password, ElementName=passwrdBox}"/>
+                </DataTrigger>
+
+                <!--прячем текст, когда не зажата кнопка в виде глаза 
+                (DataTrigger же в стиле passwrdBoxStyle ответственнен за то, чтобы в этот момент показать точки на месте текста)-->
+                <DataTrigger Binding="{Binding Visibility, ElementName=passwrdBox}" Value="Visible">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--Когда свойство зависимостей IsPassword = true => мы показываем блок пароля. 
+        Справа в этом блоке размещается кнопка для переключения вида пароля от зашифрованного (в виде точек) к тексту, который ввел пользователь. 
+        Когда пользователь зажимает эту кнопку, инф-ция введенная в PasswordBox попадает в ЭУ userData (ф-ция passwrdBox_PasswordChanged), 
+        видимость этого ЭУ становиться visible, PasswordBox, наоборот, - Collapsed, и мы видим то, что ввел пользователь-->
+        <Style x:Key="passwrdBoxStyle" TargetType="PasswordBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground"  Value="#E8F7EE"/>
+
+            <!--Нужно сдвинуть текст, вводимый пользователем ниже-->
+            <Style.Triggers>
+
+                <DataTrigger  Binding="{Binding FontSize, ElementName=titleTextBlock}" Value="12">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard SpeedRatio="10">
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" To="0 20 0 0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard SpeedRatio="10">
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" To="0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+
+                <!--прячем пароль, если свойство зависимости IsPassword == false-->
+                <DataTrigger Binding="{Binding IsPassword, ElementName=TextBoxWithPlaceholderUserControl}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+
+                <!--прячем точки, когда нажата кнопка в виде глаза 
+                (DataTrigger же в стиле userDataStyle ответственнен за то, чтобы в этот момент показать текст, введенный пользователем)-->
+                <DataTrigger Binding="{Binding IsPressed, ElementName=showHidePasswrd}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
+
+    </UserControl.Resources>
+    
+    <Border x:Name="placeholderBorderUC"
+            BorderBrush="#AFD7E0"
+            BorderThickness="1"
+            CornerRadius="10"
+            Padding="16 12">
+
+        <Grid>
+            <!--Title-->
+            <TextBlock x:Name="titleTextBlock"
+                       Style="{StaticResource title}"/>
+
+            <!--TextBox-->
+            <TextBox x:Name="userData"
+                     Style="{StaticResource userDataStyle}"/>
+
+            <!--Чтобы определить, что наш контрол для пароля, используем булево свойство зависимости-->
+
+            <!--Для использования этого UserControl'а для пароля-->
+            <!--обновляем TextBox, когда пароль меняется-->
+            <PasswordBox x:Name="passwrdBox"
+                         PasswordChanged="passwrdBox_PasswordChanged"
+                         Style="{StaticResource passwrdBoxStyle}"/>
+
+            <!--Кнопка для показа/скрытия пароля-->
+            <Button x:Name="showHidePasswrd"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border>
+                            <Path Width="24"
+                              Stretch="Uniform"
+                              Fill="#AFD7E0"
+                              Data="M15 5C6.081703 5 0.32098813 14.21118 0.21679688 14.378906 A 1 1 0 0 0 0 15 A 1 1 0 0 0 0.16210938 15.544922 
+                              A 1 1 0 0 0 0.16601562 15.550781C0.18320928 15.586261 5.0188313 25 15 25C24.938822 25 29.767326 15.678741 29.826172 
+                              15.564453 A 1 1 0 0 0 29.837891 15.544922 A 1 1 0 0 0 30 15 A 1 1 0 0 0 29.785156 14.380859 
+                              A 1 1 0 0 0 29.783203 14.378906C29.679012 14.21118 23.918297 5 15 5 z M 15 8C18.866 8 22 11.134 22 15C22 
+                              18.866 18.866 22 15 22C11.134 22 8 18.866 8 15C8 11.134 11.134 8 15 8 z M 15 12 A 3 3 0 0 0 12 15 A 3 3 0 0 0 15 18 
+                              A 3 3 0 0 0 18 15 A 3 3 0 0 0 15 12 z"/>
+                        </Border>
+
+                        <!--Прячем кнопку для блоков не для пароля-->
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsPassword, ElementName=TextBoxWithPlaceholderUserControl}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                    
+                </Button.Template>
+            </Button>
+        </Grid>
+
+    </Border>
+</UserControl>

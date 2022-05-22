@@ -1,0 +1,68 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:UserControls="clr-namespace:Messenger.UserControls" >
+    
+    <!--Кнопка входа и регистрации-->
+    <Style x:Key="PaletteButton" TargetType="Button">
+        <Setter Property="MinWidth" Value="220"/>
+        <Setter Property="MaxWidth" Value="290"/>
+        <Setter Property="Width" Value="auto"/>
+        <Setter Property="Height" Value="44"/>
+        <Setter Property="Background" Value="#AFD7E0"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Cursor" Value="Hand"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="btnBorder"
+                            CornerRadius="20" 
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="btnBorder"
+                                    Property="Background"
+                                    Value="#89C1CE"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    
+    <!--Анимация страниц входа и регистрации-->
+    <Style TargetType="Page" x:Key="FromBottomToTopPageAnim">
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                <BeginStoryboard>
+                    <Storyboard Storyboard.TargetProperty="Margin" SpeedRatio="5">
+                        <!--Страница будет появляться снизу-->
+                        <ThicknessAnimation>
+                            <ThicknessAnimation.From>
+                                <Thickness Left="0"
+                                           Top="0"
+                                           Bottom="-1000"
+                                           Right="0"/>
+                            </ThicknessAnimation.From>
+
+                            <ThicknessAnimation.To>
+                                <Thickness Left="0"
+                                           Top="0"
+                                           Bottom="0"
+                                           Right="0"/>
+                            </ThicknessAnimation.To>
+                        </ThicknessAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>
