@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="Messenger.UserControls.RoundProfileButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Messenger.UserControls"
+             mc:Ignorable="d" x:Name="_profileButton"
+             Height="auto" Width="auto">
+    
+    <UserControl.Resources>
+        <BitmapImage x:Key="DefaultImage" UriSource="pack://application:,,,/Images/defaultImg.jpg"/>
+
+        <!--Онлайн/офлайн стиль-->
+        <Style x:Key="AvailabilityStyle" TargetType="{x:Type Ellipse}">
+            <Setter Property="Width" Value="13"/>
+            <Setter Property="Height" Value="13"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Fill" Value="#8A995A"/>
+            
+            <Style.Triggers>
+                <!--офлайн - значит скрываем значок-->
+                <DataTrigger Binding="{Binding ElementName=_profileButton, Path=IsOnline,FallbackValue=False,TargetNullValue=False}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    
+    <Viewbox Stretch="Fill">
+        <Button>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="MinHeight" Value="47"/>
+                    <Setter Property="MinWidth" Value="47"/>
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </Button.Style>
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <!--Картинка-->
+                        <Ellipse>
+                            <Ellipse.Fill>
+                                <ImageBrush Stretch="Uniform" ImageSource="{Binding ElementName=_profileButton, Path=ProfileImageSource,
+                                    FallbackValue={StaticResource DefaultImage},TargetNullValue={StaticResource DefaultImage}}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+
+                        <!--Статус (онлайн/офлайн)-->
+                        <Ellipse Style="{StaticResource AvailabilityStyle}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </Viewbox>
+
+</UserControl>

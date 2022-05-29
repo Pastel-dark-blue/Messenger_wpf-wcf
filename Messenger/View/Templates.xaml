@@ -20,19 +20,4 @@
         </Canvas>
     </ControlTemplate>
 
-    <!--Всплывающая подсказка для невалидных полей-->
-    <ControlTemplate x:Key="errorToolTipStyle" TargetType="ToolTip">
-        <TextBlock TextWrapping="Wrap"
-                   MaxWidth="400"
-                   Height="auto"
-                   Background="#473f4a"
-                   Opacity="0.8"
-                   Foreground="#AFD7E0"
-                   FontSize="16"
-                   Padding="5">
-            <ContentPresenter HorizontalAlignment="Left" 
-                              VerticalAlignment="Center"/>
-        </TextBlock>
-    </ControlTemplate>
-
 </ResourceDictionary>

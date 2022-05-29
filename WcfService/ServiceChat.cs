@@ -43,7 +43,7 @@ namespace WcfService
         {
             long[] onlineUsersId = new long[onlineUsers.Count()];
 
-            for(int i = 0; i < onlineUsersId.Length; i++)
+            for(int i = 0; i < onlineUsers.Count; i++)
             {
                 onlineUsersId[i] = onlineUsers[i].Id;
             }

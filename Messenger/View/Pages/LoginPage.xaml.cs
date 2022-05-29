@@ -25,6 +25,9 @@ namespace Messenger.View.Pages
         public LoginPage()
         {
             InitializeComponent();
+
+            LoginField.Text = "user3";
+            PasswordField.passwrdBox.Password = "password3";
         }
 
         Authorization mainWnd { get => Application.Current.MainWindow as Authorization; }
@@ -117,14 +120,8 @@ namespace Messenger.View.Pages
             // всплывающая подсказка для отображения текста ошибки
             ToolTip tooltip = new ToolTip();
 
-            //tooltip.Background = new SolidColorBrush(Color.FromRgb(71, 63, 74)) { Opacity = 0.7 };
-            //tooltip.Foreground = new SolidColorBrush(Color.FromRgb(175, 215, 224));
-            //tooltip.FontSize = 16;
-            //tooltip.BorderThickness = new Thickness(0, 0, 0, 0);
-            //tooltip.Width = 400;
-
-            ControlTemplate template = Application.Current.FindResource("errorToolTipStyle") as ControlTemplate;
-            tooltip.Template = template;
+            Style style = Application.Current.FindResource("errorToolTipStyle") as Style;
+            tooltip.Style = style;
             tooltip.Content = text;
 
             return tooltip;
