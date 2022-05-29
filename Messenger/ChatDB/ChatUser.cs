@@ -4,50 +4,50 @@ namespace Messenger.ChatDB
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Runtime.Serialization;
-    using System.ServiceModel;
+    using System.Data.Entity.Spatial;
     using System.Text.RegularExpressions;
 
     [Table("ChatUser")]
-    [DataContract]
-    //[KnownType(typeof(ChatUser))]
-    //[KnownType(typeof(Message))]
     public partial class ChatUser
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ChatUser()
         {
+            Chat = new HashSet<Chat>();
             Message = new HashSet<Message>();
+            Party = new HashSet<Party>();
         }
 
-        //[DataMember]
         public long Id { get; set; }
 
         [Required]
         [StringLength(30)]
-        //[IgnoreDataMember]
         public string Login { get; set; }
 
         [Required]
         [StringLength(254)]
-        //[IgnoreDataMember]
         public string Email { get; set; }
 
         [Required]
         [StringLength(50)]
-        //[IgnoreDataMember]
         public string Password { get; set; }
 
-        //[IgnoreDataMember]
         public byte[] Photo { get; set; }
 
         [StringLength(2000)]
-        //[IgnoreDataMember]
-        public string Bio { get; set; }
+        public string About { get; set; }
+
+        [Column(TypeName = "smalldatetime")]
+        public DateTime LastTimeOnline { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //[IgnoreDataMember]
+        public virtual ICollection<Chat> Chat { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Message> Message { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Party> Party { get; set; }
 
         #region ¬алидаци€ через методы класса ChatUser
         // валидаци€ всех полей
@@ -77,7 +77,7 @@ namespace Messenger.ChatDB
             if (!isMatch.Success)
                 return "Ќеккоректное значение электронной почты. " +
                     "јдрес должен содержать две части разделенные знаком\"@\", " +
-                    "перва€ часть - им€ почтового €щика, втора€ - доменное им€ того сервера, на котором расположен почтовый €щик." +
+                    "перва€ часть - им€ почтового €щика, втора€ - доменное им€ того сервера, на котором расположен почтовый €щик. " +
                     "Ќапример: myEmail@mail.ru";
 
             return null;
@@ -96,9 +96,5 @@ namespace Messenger.ChatDB
         }
         #endregion
 
-        // wcf
-        //[NotMapped]     // не попадет в модель Ѕƒ
-        //[IgnoreDataMember]
-        //public OperationContext OperationContext { get; set; }
     }
 }

@@ -4,146 +4,277 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Messenger.View.Windows"
+        xmlns:UserControls="clr-namespace:Messenger.UserControls" xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="ChatWindow" 
-        Height="450" 
-        Width="800"
+        Height="800" 
+        Width="1400"
+        ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
-        Closing="Window_Closing">
-    
+        Closing="Window_Closing"
+        Margin="0" Padding="0">
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="95"/>
+            <ColumnDefinition Width="447"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="310" x:Name="InfoPanel"/>
         </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <!--Верхняя панель-->
-        <Border  Grid.Row="0" 
-                 Grid.ColumnSpan="2"
-                 Padding="15 10" 
-                 Background="White"
-                 Opacity="0.7"
-                 BorderThickness="0 0 0 3"
-                 BorderBrush="#6a678c">
-
-            <Grid>
-                <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center">
-
-                    <Ellipse Width="37" 
-                         Height="37"
-                         Fill="#AFD7E0"/>
-
-                    <TextBlock Text="Username" 
-                           FontSize="20"
-                           Margin="20 0 0 0"/>
-
-
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" 
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center">
-
-                    <Button Height="37" Width="37" HorizontalAlignment="Right">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Grid>
-                                    <Grid.Background>
-                                        <ImageBrush ImageSource="pack://application:,,,/Images/logout.png" 
-                                    Stretch="UniformToFill"/>
-                                    </Grid.Background>
-                                </Grid>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <!--Панель справа (юзеры онлайн, зарегистрированные, поиск)-->
-        <Border Grid.Row="1" Grid.Column="0" Background="White" Opacity="0.7" Padding="10 20">
-            <StackPanel >
-                <TextBlock Text="Онлайн" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
-                <ListBox Background="White" Opacity="0.9" Margin="10 10 10 30" MaxHeight="400">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Ellipse Width="20" 
-                                         Height="20"
-                                         HorizontalAlignment="Left"
-                                         Fill="#AFD7E0"/>
-
-                                <TextBlock Text="Username" 
-                                           FontSize="20"
-                                           Margin="20 0 0 0"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-                <TextBlock Text="Зарегистрированы" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
-                <ListBox Background="White" Opacity="0.9" Margin="10 10 10 30" MaxHeight="400">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Ellipse Width="20" 
-                                         Height="20"
-                                         HorizontalAlignment="Left"
-                                         Fill="#AFD7E0"/>
-
-                                <TextBlock Text="Username" 
-                                           FontSize="20"
-                                           Margin="20 0 0 0"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
-        </Border>
-
-        <!--Сообщения и их отправка-->
-
-        <Grid Grid.Row="1" Grid.Column="1">
+        <!--#region Первая панель с меню-->
+        <Grid Grid.Column="0" Background="#3B4666">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="70"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="1">
+            <!--#region Профильная картинка-->
+            <Border Height="57" Width="57" CornerRadius="50" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border.Background>
+                    <ImageBrush  ImageSource="pack://application:,,,/Images/loginRegisterBackground.jpg" 
+                    Stretch="UniformToFill"/>
+                </Border.Background>
+            </Border>
+            <!--#endregion-->
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
+            <!--Иконки посередине для перехода к чатам и к редакт. профиля-->
+            <UserControls:MenuListControl Grid.Row="1" x:Name="MenuList" VerticalAlignment="Center"/>
 
-                <TextBox x:Name="msgTextBox"
-                         FontSize="16"
-                         Padding="5"
-                         VerticalAlignment="Center"
-                         Background="White" 
-                         Opacity="0.2"
-                         Margin="20 0"
-                         KeyDown="msgTextBox_KeyDown"/>
-
-                <Button Grid.Column="1" 
-                        Padding="10 0"
-                        Content="Отправить" 
-                        Height="40" 
-                        FontSize="16"
-                        Background="White" 
-                        Opacity="0.8"/>
-            </Grid>
-
-
-            <ListBox x:Name="chatBox"/>
+            <!--Иконка выхода-->
+            <Button Grid.Row="2" x:Name="LogoutButton" VerticalAlignment="Center" Click="LogoutButton_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="47" HorizontalAlignment="Center">
+                            <Path Data="M16 2v7h-2v-5h-12v16h12v-5h2v7h-16v-20h16zm2 9v-4l6 5-6 5v-4h-10v-2h10z">
+                                <Path.LayoutTransform>
+                                    <RotateTransform Angle="180"></RotateTransform>
+                                </Path.LayoutTransform>
+                                <Path.Style>
+                                    <Style  TargetType="{x:Type Path}">
+                                        <Setter Property="Fill" Value="#E5E4F0"/>
+                                        <Setter Property="Opacity" Value="0.4"/>
+                                        <Setter Property="Width" Value="47"/>
+                                        <Setter Property="Stretch" Value="Uniform"/>
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}}" Value="True">
+                                                <Setter Property="Opacity" Value="1"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}}" Value="True">
+                                                <Setter Property="Opacity" Value="1"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
+        <!--#endregion-->
+
+        <!--#region Вторая панель с пользователями и поиском-->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="107"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="107"/>
+            </Grid.RowDefinitions>
+                <!--#region Поиск-->
+            <Border Margin="46 0" Grid.Row="0" Background="#E5E4F0" Height="57" CornerRadius="30" HorizontalAlignment="Stretch">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <!--Для иконки-->
+                            <ColumnDefinition Width="70"/>
+                            <!--Для поля ввода-->
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--Размещаем иконку поиска (лупу)-->
+                        <Image Width="26" Stretch="Uniform" Source="pack://application:,,,/Images/search.png"/>
+
+                        <!--Placeholder-->
+                        <TextBlock Grid.Column="1" Text="Введите для поиска..." FontSize="20" 
+                             HorizontalAlignment="Left" VerticalAlignment="Center"
+                             Margin="0 0 20 0" Background="Transparent" Foreground="#B4B1D1">
+                        <!--Триггер, чтобы placeholder скрывался при клике по полю ввода-->
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=searchQuery}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <!--Поле ввода-->
+                        <TextBox Grid.Column="1" x:Name="searchQuery" FontSize="20" 
+                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                             VerticalContentAlignment="Center" TextAlignment="Left"
+                             Margin="0 0 20 0" Background="Transparent" BorderThickness="0"/>
+                    </Grid>
+                </Border>
+                <!--#endregion-->
+
+            <!--#region ListBox со списком пользователей-->
+            <UserControls:ChatList Margin="21.5 0" Grid.Row="1" x:Name="UsersListBox" 
+                                   Selector.SelectionChanged="UsersListBox_SelectionChanged"/>
+            <!--#endregion-->
+
+            <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                <!--иконка info-->
+                <Label HorizontalAlignment="Center" Margin="0 0 20 0">
+                    <Path Data="M 12 2 C 6.4889971 2 2 6.4889971 2 12 C 2 17.511003 6.4889971 22 12 22 C 17.511003 22 22 17.511003 22 12 C 22 
+                          6.4889971 17.511003 2 12 2 z M 12 4 C 16.430123 4 20 7.5698774 20 12 C 20 16.430123 16.430123 20 12 20 C 7.5698774 
+                          20 4 16.430123 4 12 C 4 7.5698774 7.5698774 4 12 4 z M 11 7 L 11 9 L 13 9 L 13 7 L 11 7 z M 11 11 L 11 17 L 13 17 L 
+                          13 11 L 11 11 z">
+                        <Path.Style>
+                            <Style  TargetType="{x:Type Path}">
+                                <Setter Property="Fill" Value="#404C6C"/>
+                                <Setter Property="Height" Value="27"/>
+                                <Setter Property="Stretch" Value="UniformToFill"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            </Style>
+                        </Path.Style>
+                    </Path>
+                    <Label.ToolTip>
+                        <ToolTip Style="{StaticResource informationToolTipStyle}" ToolTipService.ShowDuration="7000" 
+                                 Content="То что вы видите в панели выше - список последних 20 зарегистрировавшихся пользователей. Воспользуйтесь поиском, чтобы найти нужного человека" />
+                    </Label.ToolTip>
+                </Label>
+
+                <!--иконка перезагрузки-->
+                <Label HorizontalAlignment="Center" MouseDown="RefreshUsersList">
+                    <Path Data="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 
+                          5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 
+                          26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 
+                          27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 
+                          25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z">
+                        <Path.Style>
+                            <Style  TargetType="{x:Type Path}">
+                                <Setter Property="Fill" Value="#404C6C"/>
+                                <Setter Property="Height" Value="27"/>
+                                <Setter Property="Stretch" Value="UniformToFill"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            </Style>
+                        </Path.Style>
+                    </Path>
+                    <Label.ToolTip>
+                        <ToolTip Style="{StaticResource informationToolTipStyle}" ToolTipService.ShowDuration="7000" 
+                                 Content="Нажмите для обновления списка" />
+                    </Label.ToolTip>
+                </Label>
+            </StackPanel>
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Экран чата-->
+        <Border Grid.Column="2" BorderThickness="0.5 0 0.5 0" BorderBrush="#404C6C" Background="#E5E4F0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+
+                <!--Листбокс сообщений-->
+                <UserControls:Conversation Grid.Row="0" x:Name="ConversationListBox"/>
+            
+            <!--Отправка соо-->
+                    <Grid Grid.Row="1" Background="White">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Margin="14 20" Background="#E5E4F0" Height="auto" 
+                                CornerRadius="30" HorizontalAlignment="Stretch">
+                            <Grid>
+                                
+                            <!--Placeholder-->
+                            <TextBlock Text="Введите ваше сообщение..." FontSize="20" 
+                                     HorizontalAlignment="Left" VerticalAlignment="Center"
+                                     Margin="25 0" Background="Transparent" Foreground="#B4B1D1">
+                                <!--Триггер, чтобы placeholder скрывался при клике по полю ввода-->
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=textMsgTextBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                                
+                            <!--Поле ввода-->
+                            <TextBox x:Name="textMsgTextBox" FontSize="20" KeyDown="textMsgTextBox_KeyDown"
+                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                     VerticalContentAlignment="Center" TextAlignment="Left"
+                                     Margin="25 0" Background="Transparent" BorderThickness="0"/>
+                                
+                        </Grid>
+                        </Border>
+
+                    <!--Кпопка отправки-->
+                    <Button Grid.Column="1" Style="{StaticResource SendBtnStyle}" x:Name="sendMsgButton" 
+                            Click="sendMsgButton_Click" Cursor="Hand">
+                        <Path Data="M6,3A2,2,0,0,0,4,5L4,11A2,2,0,0,0,5.3398438,12.884766A2,2,0,0,0,6,13A2,2,0,0,0,6.0214844,13L18,
+                              15 6.0214844,17.001953A2,2,0,0,0,6,17A2,2,0,0,0,5.3378906,17.115234A2,2,0,0,0,4,19L4,25A2,2,0,0,0,6,
+                              27A2,2,0,0,0,6.9921875,26.734375L6.9941406,26.734375 27.390625,15.921875 27.392578,15.917969A1,1,0,0,0,
+                              28,15A1,1,0,0,0,27.390625,14.078125L6.9941406,3.265625A2,2,0,0,0,6,3z" Fill="White"/>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Border>
+        <!--#endregion-->
+        
+        <!--#region Информация о пользователе-->
+        <Grid Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!--Крестик-->
+            <Image Source="pack://application:,,,/Images/close.jpg" Width="30" MouseDown="CloseInfoPanel"
+                   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 20 0" Cursor="Hand"/>
+
+            <StackPanel Grid.Row="1" x:Name="UserInfoStackPanel">
+                <Border Width="200" Height="200" VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <Image x:Name="ProfileImg" Source="pack://application:,,,/Images/loginRegisterBackground.jpg"
+                   VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 20" Stretch="Uniform"/>
+                </Border>
+
+                <Border BorderThickness="0 0.5" BorderBrush="#D7DBE7" Margin="20 0" Padding="0 10">
+                    <StackPanel>
+                        <TextBlock Text="Логин" FontSize="20" Foreground="#9098AC" Margin="0 0 0 7"/>
+                        <TextBlock Foreground="#404C6C" Margin="20 0" FontSize="16" TextWrapping="Wrap" 
+                                   Text="{Binding Login}"/>
+                        
+                        <TextBlock Text="О себе" FontSize="20" Foreground="#9098AC" Margin="0 10 0 7"/>
+                        <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto">
+                            <TextBlock Foreground="#404C6C" Margin="20 0 0 0" FontSize="16" TextWrapping="Wrap"
+                                       Text="{Binding About}"/>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Foreground="#404C6C" Margin="0 30 0 0" FontSize="16" TextWrapping="Wrap" 
+                           HorizontalAlignment="Center" Opacity="0.7">
+                    <Run Text="Последний раз был(а) в сети"/>
+                    <LineBreak/>
+                    <Run Text="{Binding LastTimeOnline}"/>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        <!--#endregion-->
     </Grid>
 </Window>

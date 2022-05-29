@@ -20,6 +20,8 @@ namespace Messenger.ChatDB
 
         public long? SenderUserId { get; set; }
 
+        public bool? IsRead { get; set; }
+
         public virtual ChatUser ChatUser { get; set; }
     }
 }
