@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -63,7 +64,7 @@ namespace Messenger.View.Pages
         {
             // подгружаем юзеров в панель 
             UsersListBox.UCListBox.ItemsSource = GetUsers();
-            UsersListBox.UCListBox.SelectedIndex = 0; // первй юзер будет выбран по умолчанию
+            UsersListBox.UCListBox.SelectedIndex = 0; // первый юзер будет выбран по умолчанию
 
             try
             {
@@ -85,7 +86,7 @@ namespace Messenger.View.Pages
                                 MessageStatus = msgStatus,
                                 Message = msg.Content,
                                 Timestamp = msg.CreationDate.ToString(),
-                                //SenderPhoto=msg.ChatUser?.Photo.ToString(),
+                                SenderPhoto=msg.ChatUser.Photo?.ToString(),
                             });
                     }
 
@@ -155,6 +156,19 @@ namespace Messenger.View.Pages
 
         public void MsgCallback(string msg, long id)
         {
+            ChatUser chatUser = null;
+            try
+            {
+                using (ChatDBModel db = new ChatDBModel())
+                {
+                    chatUser = db.ChatUser.FirstOrDefault(u => u.Id == id);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("При попытке получить данные из базы данных произошла ошибка.\nТекст ошибки:\t" + ex.Message);
+            }
             try
             {
                 string msgStatus = "Received";
@@ -166,7 +180,7 @@ namespace Messenger.View.Pages
                     MessageStatus = msgStatus,
                     Message = msg,
                     Timestamp = DateTime.Now.ToString(),
-                    //SenderPhoto=msg.ChatUser?.Photo.ToString(),
+                    SenderPhoto = chatUser.Photo?.ToString(),
                 };
                 ConversationListBox.UCListBox.Items.Add(newMsg);
                 // автоматически пороматываем к последнему соо
@@ -243,7 +257,29 @@ namespace Messenger.View.Pages
         private void RefreshUsersList(object sender, MouseButtonEventArgs e)
         {
             UsersListBox.UCListBox.ItemsSource = GetUsers();
+            InfoPanel.Width = new GridLength(0);
         }
 
+        private void searchQuery_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var allUsers = GetUsers(); // список всех пользователей
+                List<ChatListUser> resultListOfUsers = new List<ChatListUser>();
+
+                Regex lowerReg = new Regex(searchQuery.Text.ToLower()); // введенный для поиска текст
+
+                foreach(var u in allUsers)
+                {
+                    if (lowerReg.IsMatch(u.Login.ToLower()))
+                    {
+                        resultListOfUsers.Add(u);
+                    }
+                }
+
+                // заполняем список найденными пользователями
+                UsersListBox.UCListBox.ItemsSource = resultListOfUsers;
+            }
+        }
     }
 }

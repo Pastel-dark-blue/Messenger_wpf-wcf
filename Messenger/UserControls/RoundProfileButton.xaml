@@ -46,7 +46,7 @@
                         <!--Картинка-->
                         <Ellipse>
                             <Ellipse.Fill>
-                                <ImageBrush Stretch="Uniform" ImageSource="{Binding ElementName=_profileButton, Path=ProfileImageSource,
+                                <ImageBrush Stretch="UniformToFill" ImageSource="{Binding ElementName=_profileButton, Path=ProfileImageSource,
                                     FallbackValue={StaticResource DefaultImage},TargetNullValue={StaticResource DefaultImage}}"/>
                             </Ellipse.Fill>
                         </Ellipse>

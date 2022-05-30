@@ -85,7 +85,8 @@ namespace Messenger.View.Pages
                 {
                     var chatUser = db.ChatUser.FirstOrDefault(user =>
                         user.Login == login &&
-                        user.Password == password);
+                        user.Password == password &&
+                        user.IsActiveAccount == true);
 
                     if (chatUser != null)
                     {

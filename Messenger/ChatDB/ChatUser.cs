@@ -32,10 +32,12 @@ namespace Messenger.ChatDB
         [StringLength(50)]
         public string Password { get; set; }
 
-        public byte[] Photo { get; set; }
+        public string Photo { get; set; }
 
         [StringLength(2000)]
         public string About { get; set; }
+
+        public bool IsActiveAccount { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime LastTimeOnline { get; set; }

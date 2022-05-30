@@ -1,18 +1,13 @@
 ﻿using Messenger.ChatDB;
+using Messenger.View.Windows;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace Messenger.View.Pages
@@ -23,10 +18,13 @@ namespace Messenger.View.Pages
     public partial class ProfilePage : Page
     {
         ChatUser user = new ChatUser();
-        public ProfilePage(ChatUser user)
+        ChatWindow chatWindow;
+
+        public ProfilePage(ref ChatUser user, ChatWindow chatWindow)
         {
             InitializeComponent();
             this.user = user;
+            this.chatWindow = chatWindow;
 
             loginField.txtLimitedInput.Text = user.Login;
             loginField.txtLimitedInput.IsEnabled = false;
@@ -36,6 +34,9 @@ namespace Messenger.View.Pages
 
             aboutField.txtLimitedInput.Text = user.About;
             aboutField.txtLimitedInput.IsEnabled = false;
+
+            if (user.Photo != null) 
+                ProfileImg.Source = new BitmapImage(new Uri(user.Photo));
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
@@ -108,6 +109,22 @@ namespace Messenger.View.Pages
 
                         db.SaveChanges();
 
+                        // обновляем данные юзере
+                        var chatUser = db.ChatUser.FirstOrDefault(u => u.Id == user.Id);
+                        if (chatUser != null)
+                        {
+                            user = chatUser;
+                        }
+
+                        if (user != null)
+                        {
+                            loginField.txtLimitedInput.Text = user.Login;
+
+                            emailField.txtLimitedInput.Text = user.Email;
+
+                            aboutField.txtLimitedInput.Text = user.About;
+                        }
+
                         // Popup о том, что данные сохранены
                         SavePopup.IsOpen = true;
                         // таймер на показ Popup на 2 секунды
@@ -145,7 +162,7 @@ namespace Messenger.View.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show("При попытке сохранить данные произошла ошибка.\nТекст ошибки:\t" + ex.Message);
+                System.Windows.MessageBox.Show("При попытке сохранить данные произошла ошибка.\nТекст ошибки:\t" + ex.Message);
                 return;
             }
 
@@ -157,13 +174,13 @@ namespace Messenger.View.Pages
             loginField.txtLimitedInput.IsEnabled = false;
             // убираем ошибки
             loginField.txtLimitedInput.Background = Brushes.Transparent;
-            loginField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+            loginField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c)); 
             // записываем старые данные
             loginField.txtLimitedInput.Text = user.Login;
 
             emailField.txtLimitedInput.IsEnabled = false;
             emailField.txtLimitedInput.Background = Brushes.Transparent;
-            emailField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+            emailField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c));
             emailField.txtLimitedInput.Text = user.Email;
 
             aboutField.txtLimitedInput.IsEnabled = false;
@@ -174,12 +191,12 @@ namespace Messenger.View.Pages
         }
 
         // подсказка для поля с не валидными данными
-        private ToolTip CreateToolTip(string text)
+        private System.Windows.Controls.ToolTip CreateToolTip(string text)
         {
             // всплывающая подсказка для отображения текста ошибки
-            ToolTip tooltip = new ToolTip();
+            var tooltip = new System.Windows.Controls.ToolTip();
 
-            Style style = Application.Current.FindResource("errorEditToolTipStyle") as Style;
+            Style style = System.Windows.Application.Current.FindResource("errorEditToolTipStyle") as Style;
             tooltip.Style = style;
             tooltip.Content = text;
 
@@ -339,7 +356,7 @@ namespace Messenger.View.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("При попытке сохранить данные произошла ошибка.\nТекст ошибки:\t" + ex.Message);
+                    System.Windows.MessageBox.Show("При попытке сохранить данные произошла ошибка.\nТекст ошибки:\t" + ex.Message);
                     return;
                 }
             }
@@ -356,6 +373,77 @@ namespace Messenger.View.Pages
                     ErrorPasswordPopup.IsOpen = false;
                     time.Stop();
                 };
+            }
+        }
+
+        private void changePhoto_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Image files (*.png;*.jpg)|*.png;*.jpg|All files (*.*)|*.*";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string path = dialog.FileName;
+
+                try
+                {
+                    using (ChatDBModel db = new ChatDBModel())
+                    {
+                        db.Database.ExecuteSqlCommand("update ChatUser set Photo='" +
+                                        path + "' where Id=" + user.Id);
+                        db.SaveChanges();
+
+                        // обновляем данные юзере
+                        var chatUser = db.ChatUser.FirstOrDefault(u => u.Id == user.Id);
+                        if(chatUser != null)
+                        {
+                            user = chatUser;
+                        }
+
+                        if (user.Photo != null)
+                            ProfileImg.Source = new BitmapImage(new Uri(user.Photo));
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show("При попытке сохранить данные произошла ошибка.\nТекст ошибки:\t" + ex.Message);
+                    return;
+                }
+            }
+
+            
+
+        }
+
+        private void DeleteTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Вы уверены, что хотите удалить свой аккаунт?\n" +
+                "Все ваши сообщения будут сохранены, но этим аккаунтом вы больше не сможете воспользоваться.",
+                "Удаление аккаунта",
+                MessageBoxButtons.YesNo);
+
+            if(dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                try
+                {
+                    using (ChatDBModel db = new ChatDBModel())
+                    {
+                        // деактивируем пользователя
+                        db.Database.ExecuteSqlCommand("update ChatUser set IsActiveAccount=0 where Id=" + user.Id);
+
+                        db.SaveChanges();
+                    }
+
+                    Authorization authWind = new Authorization();
+                    authWind.Show();
+                    chatWindow.Close();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show("Произошла ошибка при попытке удалить пользователя.\n" +
+                        "Текст ошибки: " + ex.Message);
+                }
             }
         }
     }
