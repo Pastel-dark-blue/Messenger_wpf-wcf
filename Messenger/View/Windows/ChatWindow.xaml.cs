@@ -71,9 +71,19 @@ namespace Messenger.View.Windows
         {
             if (IsConnected && client.InnerChannel.State != System.ServiceModel.CommunicationState.Faulted)
             {
-                onlineUser.LastTimeOnline = DateTime.Now;
                 client.Disconnect(onlineUser.Id);  // отключение пользователя от сети
                 IsConnected = false;
+
+                // записываем дату последнего посещения
+                using (ChatDBModel db = new ChatDBModel())
+                {
+                    var chatUser = db.ChatUser.FirstOrDefault(u => u.Id == onlineUser.Id);
+                    if(chatUser != null)
+                    {
+                        chatUser.LastTimeOnline = DateTime.Now;
+                        db.SaveChanges();
+                    }
+                }
             }
         }
 

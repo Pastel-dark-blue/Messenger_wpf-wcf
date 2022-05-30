@@ -163,7 +163,6 @@ namespace Messenger.View.Pages
                 {
                     chatUser = db.ChatUser.FirstOrDefault(u => u.Id == id);
                 }
-
             }
             catch (Exception ex)
             {
