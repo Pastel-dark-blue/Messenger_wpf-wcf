@@ -99,7 +99,7 @@ namespace Messenger.View.Windows
             if (menuListControl.UCListBox.SelectedIndex == 0)
             {
                 // создаем страницу ChatScreenPage
-                ProfilePage profilePage = new ProfilePage(onlineUser);
+                ProfilePage profilePage = new ProfilePage(ref onlineUser, this);
                 // показываем страницу ChatScreenPage
                 chatWindFrame.Navigate(profilePage);
             }

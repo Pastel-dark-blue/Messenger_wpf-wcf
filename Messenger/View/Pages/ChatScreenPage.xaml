@@ -55,7 +55,7 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <!--Поле ввода-->
-                    <TextBox Grid.Column="1" x:Name="searchQuery" FontSize="20" 
+                    <TextBox Grid.Column="1" x:Name="searchQuery" FontSize="20" KeyDown="searchQuery_KeyDown"
                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              VerticalContentAlignment="Center" TextAlignment="Left"
                              Margin="0 0 20 0" Background="Transparent" BorderThickness="0"/>
@@ -188,8 +188,17 @@
 
             <StackPanel Grid.Row="1" x:Name="UserInfoStackPanel">
                 <Border Width="200" Height="200" VerticalAlignment="Top" HorizontalAlignment="Center">
-                    <Image x:Name="ProfileImg" Source="pack://application:,,,/Images/loginRegisterBackground.jpg"
-                   VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 20" Stretch="Uniform"/>
+                    <Image x:Name="ProfileImg" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 20" Stretch="Uniform">
+                        <Image.Source>
+                            <Binding Path="Photo" >
+                                <Binding.TargetNullValue>
+                                    <!--Значение по умолчанию-->
+                                    <ImageSource>pack://application:,,,/Images/defaultImg.jpg</ImageSource>
+                                </Binding.TargetNullValue>
+                            </Binding>
+                        </Image.Source>
+                    </Image>
                 </Border>
 
                 <Border BorderThickness="0 0.5" BorderBrush="#D7DBE7" Margin="20 0" Padding="0 10">

@@ -60,12 +60,13 @@
         <StackPanel Grid.Column="0">
             <!--Картинка профиля-->
             <Border VerticalAlignment="Top" HorizontalAlignment="Center" Width="360" Height="360" >
-                <Image x:Name="ProfileImg" Source="pack://application:,,,/Images/loginRegisterBackground.jpg"
+                <Image x:Name="ProfileImg" Source="pack://application:,,,/Images/defaultImg.jpg"
                    VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 20" Stretch="Uniform" />
             </Border>
 
             <TextBlock Text="Сменить картинку профиля" FontSize="20" Foreground="#404C6C" Opacity="0.4"
-                       TextDecorations="Underline" HorizontalAlignment="Center" Margin="0 6 0 0" Cursor="Hand"/>
+                       TextDecorations="Underline" HorizontalAlignment="Center" Margin="0 6 0 0" Cursor="Hand"
+                       x:Name="changePhoto" MouseDown="changePhoto_MouseDown"/>
         </StackPanel>
 
         <StackPanel Grid.Column="0" VerticalAlignment="Bottom">
@@ -111,11 +112,15 @@
             <Popup Name="ErrorPopup" AllowsTransparency="True" PlacementTarget="{Binding ElementName=SaveBtn}" Placement="Top">
                 <TextBlock Text="Исправьте ошибки" Opacity="0.7" Background="red" Foreground="Black" FontSize="16"/>
             </Popup>
+
+            <TextBlock Text="Удалить аккаунт" FontSize="20" Foreground="#e97857" 
+                       TextDecorations="Underline" HorizontalAlignment="Center" Margin="0 30 0 0" Cursor="Hand"
+                           x:Name="DeleteTextBlock" MouseDown="DeleteTextBlock_MouseDown"/>
         </StackPanel>
 
         <!--#region Информация справа о пользователе -->
         
-            <Grid Grid.Column="1" Margin="75 0 0 0">
+            <Grid Grid.Column="1" Margin="75 0 0 0" x:Name="InfoForEditGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
@@ -125,7 +130,7 @@
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="80"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="80"/>
+                <RowDefinition Height="120"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>

@@ -40,7 +40,7 @@
 
                                 <DockPanel LastChildFill="True">
                                     <!--#region Картинка профиля-->
-                                    <local:RoundProfileButton ProfileImageSource="{Binding Photo}" VerticalAlignment="Top"/>
+                                    <local:RoundProfileButton ProfileImageSource="{Binding SenderPhoto}" VerticalAlignment="Top"/>
                                     <!--#endregion-->
 
                                     <!--#region Сообщение и дата отправки-->

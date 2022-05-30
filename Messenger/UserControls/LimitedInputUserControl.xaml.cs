@@ -26,8 +26,6 @@ namespace Messenger.UserControls
             this.DataContext = this;
         }
 
-        public string Title { get; set; }
-
         public int MaxLength { get; set; }
     }
 }

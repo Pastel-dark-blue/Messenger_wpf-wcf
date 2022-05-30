@@ -55,11 +55,12 @@
                                         <!--#endregion-->
 
                                     <!--#region Имя пользователя-->
-                                    <TextBlock Text="{Binding Login}" FontSize="20" Foreground="#404C6C" VerticalAlignment="Center" Margin="20 0 0 0">
+                                    <TextBlock Text="{Binding Login}" FontSize="20" VerticalAlignment="Center" Margin="20 0 0 0">
                                             <TextBlock.Style>
                                                 <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Foreground" Value="#404C6C"/>
+                                                
                                                     <Style.Triggers>
-<!--не работает-->
                                                         <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=
                                                             {x:Type ListBoxItem}, Mode=FindAncestor}}" Value="True">
                                                             <Setter Property="Foreground" Value="#E5E4F0"/>

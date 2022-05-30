@@ -103,6 +103,8 @@ namespace Messenger.View.Pages
                         chatUser.Login = login;
                         chatUser.Email = email;
                         chatUser.Password = password;
+                        chatUser.IsActiveAccount = true;
+                        chatUser.LastTimeOnline = DateTime.Now;
 
                         db.ChatUser.Add(chatUser);
                         db.SaveChanges();

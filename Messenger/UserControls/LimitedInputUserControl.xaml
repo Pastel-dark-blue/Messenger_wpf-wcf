@@ -24,7 +24,7 @@
         <TextBox MaxLength="{Binding MaxLength}" Grid.Row="1" Name="txtLimitedInput" 
                 ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" 
                 BorderThickness="1" BorderBrush="#404C6C" Padding="15 7"
-                VerticalContentAlignment="Center" TextAlignment="Left"  FontSize="{Binding FontSize}" />
+                VerticalContentAlignment="Center" TextAlignment="Left"  FontSize="{Binding FontSize}"/>
     </Grid>
 
 </UserControl>
