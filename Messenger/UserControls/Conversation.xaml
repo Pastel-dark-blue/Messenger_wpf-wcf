@@ -40,18 +40,7 @@
 
                                 <DockPanel LastChildFill="True">
                                     <!--#region Картинка профиля-->
-                                    <local:RoundProfileButton ProfileImageSource="{Binding Photo}" VerticalAlignment="Top">
-                                        <!--<Style TargetType="{x:Type local:RoundProfileButton}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding MessageStatus}" Value="Sent">
-                                                    <Setter Property="DockPanel.Dock" Value="Right"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding MessageStatus}" Value="Received">
-                                                    <Setter Property="DockPanel.Dock" Value="Left"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>-->
-                                    </local:RoundProfileButton>
+                                    <local:RoundProfileButton ProfileImageSource="{Binding Photo}" VerticalAlignment="Top"/>
                                     <!--#endregion-->
 
                                     <!--#region Сообщение и дата отправки-->
