@@ -10,11 +10,6 @@
         FontFamily="pack://application:,,,/Fonts/#Inter" 
         Style="{StaticResource FromBottomToTopPageAnim}">
 
-    <!--<Page.Background>
-        <ImageBrush ImageSource="pack://application:,,,/Images/loginRegisterBackground.jpg" 
-                    Stretch="UniformToFill"/>
-    </Page.Background>-->
-
     <Border Padding="36 28 36 32">
         <Grid>
 

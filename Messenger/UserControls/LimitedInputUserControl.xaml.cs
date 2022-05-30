@@ -10,23 +10,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Messenger.View.Windows
+namespace Messenger.UserControls
 {
     /// <summary>
-    /// Логика взаимодействия для Authorization.xaml
+    /// Логика взаимодействия для LimitedInputUserControl.xaml
     /// </summary>
-    public partial class Authorization : Window
+    public partial class LimitedInputUserControl : UserControl
     {
-        public Authorization()
+        public LimitedInputUserControl()
         {
             InitializeComponent();
-
-            // изначально показываем страницу LoginPage
-            authorizationWindFrame.Navigate(
-                new Uri("pack://application:,,,/View/Pages/LoginPage.xaml"), 
-                UriKind.RelativeOrAbsolute);
+            this.DataContext = this;
         }
+
+        public string Title { get; set; }
+
+        public int MaxLength { get; set; }
     }
 }
