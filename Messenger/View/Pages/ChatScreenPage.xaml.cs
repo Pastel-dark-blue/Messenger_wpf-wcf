@@ -90,7 +90,7 @@ namespace Messenger.View.Pages
                             });
                     }
 
-                    // автоматически пороматываем к последнему соо
+                    // автоматически проматываем к последнему соо
                     ConversationListBox.UCListBox.ScrollIntoView(ConversationListBox.UCListBox.Items[ConversationListBox.UCListBox.Items.Count - 1]);
                 }
             }
@@ -111,13 +111,17 @@ namespace Messenger.View.Pages
             {
                 using (ChatDBModel db = new ChatDBModel())
                 {
-                    // листбокс с последними 20 зарегистрировавшимися юзерами
-                    var users = db.ChatUser; // получаем список всех зарегистрированных пользователей
+                    // листбокс с зарегистрировавшимися юзерами
+                    var users = db.ChatUser; // получаем список всех активных зарегистрированных пользователей
+
+                    var activeUsers = (from u in users
+                                       where u.IsActiveAccount == true
+                                       select u);
 
                     var onlineUsers = chatWindow.client.GetOnlineUsersId(); // ид пользователей в сети
 
                     bool IsUserOnline = false;
-                    foreach (var u in users)
+                    foreach (var u in activeUsers)
                     {
                         foreach (var onlineu in onlineUsers)
                         {

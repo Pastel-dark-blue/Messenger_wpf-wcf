@@ -25,9 +25,6 @@ namespace Messenger.View.Pages
         public LoginPage()
         {
             InitializeComponent();
-
-            LoginField.Text = "user3";
-            PasswordField.passwrdBox.Password = "password3";
         }
 
         Authorization mainWnd { get => Application.Current.MainWindow as Authorization; }
@@ -81,36 +78,50 @@ namespace Messenger.View.Pages
             // если валидация пройдена, подключаемся к БД
             if (IsValid)
             {
-                using (ChatDBModel db = new ChatDBModel())
+                try
                 {
-                    var chatUser = db.ChatUser.FirstOrDefault(user =>
-                        user.Login == login &&
-                        user.Password == password &&
-                        user.IsActiveAccount == true);
+                    using (ChatDBModel db = new ChatDBModel())
+                    {
+                        var chatUser = db.ChatUser.FirstOrDefault(user =>
+                            user.Login == login &&
+                            user.Password == password &&
+                            user.IsActiveAccount == true);
 
-                    if (chatUser != null)
-                    {
-                        try
+                        if (chatUser != null)
                         {
-                            // открываем окно чата и передаем ему Id вошедшего пользователя
-                            ChatWindow chat = new ChatWindow(chatUser);
-                            chat.Show();
+                            try
+                            {
+                                // открываем окно чата и передаем ему Id вошедшего пользователя
+                                ChatWindow chat = new ChatWindow(chatUser);
+                                chat.Show();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Произошла ошибка при попытке открыть окно чата.\n" +
+                                    "Текст ошибки: " + ex.Message);
+                            }
+                            finally
+                            {
+                                // закрываем окно авторизации
+                                mainWnd.Close();
+                            }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            MessageBox.Show("Произошла ошибка при попытке открыть окно чата.\n" +
+                            MessageBox.Show("Пользователь не найден");
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Произошла ошибка при попытке входа.\n" +
                                 "Текст ошибки: " + ex.Message);
-                        }
-                        finally
-                        {
-                            // закрываем окно авторизации
-                            mainWnd.Close();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Пользователь не найден");
-                    }
+
+                    // закрываем окно авторизации
+                    mainWnd.Close();
+
+                    return;
+
                 }
             }
         }

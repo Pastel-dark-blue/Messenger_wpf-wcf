@@ -94,7 +94,6 @@ namespace Messenger.View.Windows
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-
             userDisconnect();
             Authorization authWindow = new Authorization();
             authWindow.Show();
