@@ -15,6 +15,13 @@ namespace WcfService
 
         public bool Connect(long userId)
         {
+            foreach (ServerUser user in onlineUsers)
+            {
+                if (onlineUsers.Contains(user))
+                {
+                    return false;
+                }
+            }
             ServerUser onlineUser = new ServerUser()
             {
                 Id = userId,

@@ -18,7 +18,7 @@
                 {RelativeSource AncestorType={x:Type ItemsControl}}}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -38,7 +38,17 @@
                                     </Style>
                                 </Grid.Style>
 
-                                <DockPanel LastChildFill="True">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MessageStatus}" Value="Sent">
+                                                    <Setter Property="FlowDirection" Value="RightToLeft"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    
                                     <!--#region Картинка профиля-->
                                     <local:RoundProfileButton ProfileImageSource="{Binding SenderPhoto}" VerticalAlignment="Top"/>
                                     <!--#endregion-->
@@ -57,8 +67,9 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </StackPanel.Style>
-                                        
-                                        <Border CornerRadius="20" Background="White" Padding="21 15" Margin="20 0" VerticalAlignment="Top" MaxWidth="340" MinWidth="100">
+
+                                        <Border CornerRadius="20" Background="White" Padding="21 15" Margin="20 0" VerticalAlignment="Top" 
+                                                MaxWidth="600" MinWidth="100">
                                             <TextBlock Text="{Binding Message}" FontSize="16" TextWrapping="Wrap"/>
                                         </Border>
                                         <Border CornerRadius="20" Background="Transparent" Margin="20 5 20 0">
@@ -79,15 +90,14 @@
                                         </Border>
                                     </StackPanel>
                                     <!--#endregion-->
-                                </DockPanel>
+                                </StackPanel>
                             </Grid>
                         </Border>
-
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <Style x:Key="ConversationListBoxStyle" TargetType="{x:Type ListBox}">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -96,6 +106,6 @@
     </UserControl.Resources>
 
     <ListBox Style="{StaticResource ConversationListBoxStyle}" x:Name="UCListBox"
-             ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+             ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
 </UserControl>

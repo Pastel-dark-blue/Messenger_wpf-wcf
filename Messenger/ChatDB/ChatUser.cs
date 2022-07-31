@@ -13,9 +13,7 @@ namespace Messenger.ChatDB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ChatUser()
         {
-            Chat = new HashSet<Chat>();
             Message = new HashSet<Message>();
-            Party = new HashSet<Party>();
         }
 
         public long Id { get; set; }
@@ -37,19 +35,13 @@ namespace Messenger.ChatDB
         [StringLength(2000)]
         public string About { get; set; }
 
-        public bool IsActiveAccount { get; set; }
-
         [Column(TypeName = "smalldatetime")]
-        public DateTime LastTimeOnline { get; set; }
+        public DateTime? LastTimeOnline { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Chat> Chat { get; set; }
+        public bool IsActiveAccount { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Message> Message { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Party> Party { get; set; }
 
         #region ¬алидаци€ через методы класса ChatUser
         // валидаци€ всех полей

@@ -18,9 +18,7 @@ namespace Messenger.ChatDB
         [Column(TypeName = "smalldatetime")]
         public DateTime CreationDate { get; set; }
 
-        public long? SenderUserId { get; set; }
-
-        public bool? IsRead { get; set; }
+        public long SenderUserId { get; set; }
 
         public virtual ChatUser ChatUser { get; set; }
     }

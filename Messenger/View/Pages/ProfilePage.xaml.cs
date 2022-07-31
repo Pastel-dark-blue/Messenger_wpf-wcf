@@ -143,6 +143,8 @@ namespace Messenger.View.Pages
                         aboutField.txtLimitedInput.IsEnabled = false;
 
                         SaveBtn.IsEnabled = false;
+
+                        System.Windows.MessageBox.Show("Изменения вступят в силу после повторного входа в аккаунт!");
                     }
                     else
                     {
@@ -165,9 +167,8 @@ namespace Messenger.View.Pages
                 System.Windows.MessageBox.Show("При попытке сохранить данные произошла ошибка.\nТекст ошибки:\t" + ex.Message);
                 return;
             }
-
-        }
-
+        } 
+        
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
             // делаем поле недоступным для ввода
@@ -213,15 +214,15 @@ namespace Messenger.View.Pages
         {
             oldPasswordField.txtLimitedInput.Text = "";
             oldPasswordField.txtLimitedInput.Background = Brushes.Transparent;
-            oldPasswordField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+            oldPasswordField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c));
 
             newPasswordField.txtLimitedInput.Text = "";
             newPasswordField.txtLimitedInput.Background = Brushes.Transparent;
-            newPasswordField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+            newPasswordField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c));
 
             newPasswordRepeatField.txtLimitedInput.Text = "";
             newPasswordRepeatField.txtLimitedInput.Background = Brushes.Transparent;
-            newPasswordRepeatField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+            newPasswordRepeatField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c));
 
             changePasswordGrid.Visibility = Visibility.Collapsed;
             changePasswordTextBlock.Visibility = Visibility.Visible;
@@ -325,18 +326,20 @@ namespace Messenger.View.Pages
 
                             oldPasswordField.txtLimitedInput.Text = "";
                             oldPasswordField.txtLimitedInput.Background = Brushes.Transparent;
-                            oldPasswordField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+                            oldPasswordField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c));
 
                             newPasswordField.txtLimitedInput.Text = "";
                             newPasswordField.txtLimitedInput.Background = Brushes.Transparent;
-                            newPasswordField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+                            newPasswordField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c));
 
                             newPasswordRepeatField.txtLimitedInput.Text = "";
                             newPasswordRepeatField.txtLimitedInput.Background = Brushes.Transparent;
-                            newPasswordRepeatField.txtLimitedInput.BorderBrush = Brushes.Transparent;
+                            newPasswordRepeatField.txtLimitedInput.BorderBrush = new SolidColorBrush(Color.FromRgb(0x40, 0x4c, 0x6c));
 
                             changePasswordGrid.Visibility = Visibility.Collapsed;
                             changePasswordTextBlock.Visibility = Visibility.Visible;
+
+                            System.Windows.MessageBox.Show("Изменения вступят в силу после повторного входа в аккаунт!");
                         }
                         else
                         {
@@ -402,6 +405,7 @@ namespace Messenger.View.Pages
                         if (user.Photo != null)
                             ProfileImg.Source = new BitmapImage(new Uri(user.Photo));
 
+                        System.Windows.MessageBox.Show("Изменения вступят в силу после повторного входа в аккаунт!");
                     }
 
                 }
@@ -411,9 +415,6 @@ namespace Messenger.View.Pages
                     return;
                 }
             }
-
-            
-
         }
 
         private void DeleteTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
